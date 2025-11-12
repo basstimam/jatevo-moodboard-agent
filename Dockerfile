@@ -1,5 +1,5 @@
-# Use Bun latest for compatibility
-FROM oven/bun:latest-alpine
+# Use Bun alpine (latest stable)
+FROM oven/bun:alpine
 
 # Set working directory
 WORKDIR /app
