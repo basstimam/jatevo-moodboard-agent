@@ -1,0 +1,214 @@
+{
+  "name": "Market Moodboard Agent",
+  "description": "Analyzes top 10 cryptocurrency coins by market cap and determines market mood and narrative using Jatevo AI models (zai-glm-4.6). Returns structured mood analysis with emoji indicators, narratives, and confidence scores.",
+  "url": "http://localhost:8787/",
+  "version": "0.0.1",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": true,
+    "extensions": [
+      {
+        "uri": "https://github.com/google-agentic-commerce/ap2/tree/v0.1",
+        "description": "Agent Payments Protocol (AP2)",
+        "required": true,
+        "params": {
+          "roles": ["merchant"]
+        }
+      }
+    ]
+  },
+  "defaultInputModes": ["application/json"],
+  "defaultOutputModes": ["application/json", "text/plain"],
+  "skills": [
+    {
+      "id": "analyzeMoodboard",
+      "name": "analyzeMoodboard",
+      "description": "Fetch top coins from CoinGecko and analyze market mood using Jatevo AI",
+      "inputModes": ["application/json"],
+      "outputModes": ["application/json", "text/plain"],
+      "streaming": false,
+      "x_input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "description": "Number of top coins to analyze (default: 10)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 10
+          },
+          "vs_currency": {
+            "description": "Currency for price data (default: usd)",
+            "type": "string",
+            "default": "usd"
+          }
+        },
+        "additionalProperties": false
+      },
+      "x_output_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "date": {
+            "description": "Analysis date in ISO format",
+            "type": "string"
+          },
+          "coins": {
+            "description": "Array of analyzed coins with mood data",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "symbol": {
+                  "description": "Coin symbol (e.g., BTC, ETH)",
+                  "type": "string"
+                },
+                "mood": {
+                  "description": "Mood indicator (emoji or text)",
+                  "type": "string"
+                },
+                "narrative": {
+                  "description": "Market narrative or trend description",
+                  "type": "string"
+                },
+                "score": {
+                  "description": "Confidence score between 0 and 1",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "price_change_24h": {
+                  "description": "24h price change percentage",
+                  "type": "number"
+                },
+                "market_cap_rank": {
+                  "description": "Market cap ranking",
+                  "type": "number"
+                }
+              },
+              "required": ["symbol", "mood", "narrative", "score"],
+              "additionalProperties": false
+            }
+          },
+          "market_sentiment": {
+            "description": "Overall market sentiment summary",
+            "type": "string"
+          },
+          "analyzed_at": {
+            "description": "Timestamp of analysis in ISO format",
+            "type": "string"
+          }
+        },
+        "required": ["date", "coins", "analyzed_at"],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "supportsAuthenticatedExtendedCard": false,
+  "entrypoints": {
+    "analyzeMoodboard": {
+      "description": "Fetch top coins from CoinGecko and analyze market mood using Jatevo AI",
+      "streaming": false,
+      "input_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "description": "Number of top coins to analyze (default: 10)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 10
+          },
+          "vs_currency": {
+            "description": "Currency for price data (default: usd)",
+            "type": "string",
+            "default": "usd"
+          }
+        },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "date": {
+            "description": "Analysis date in ISO format",
+            "type": "string"
+          },
+          "coins": {
+            "description": "Array of analyzed coins with mood data",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "symbol": {
+                  "description": "Coin symbol (e.g., BTC, ETH)",
+                  "type": "string"
+                },
+                "mood": {
+                  "description": "Mood indicator (emoji or text)",
+                  "type": "string"
+                },
+                "narrative": {
+                  "description": "Market narrative or trend description",
+                  "type": "string"
+                },
+                "score": {
+                  "description": "Confidence score between 0 and 1",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "price_change_24h": {
+                  "description": "24h price change percentage",
+                  "type": "number"
+                },
+                "market_cap_rank": {
+                  "description": "Market cap ranking",
+                  "type": "number"
+                }
+              },
+              "required": ["symbol", "mood", "narrative", "score"],
+              "additionalProperties": false
+            }
+          },
+          "market_sentiment": {
+            "description": "Overall market sentiment summary",
+            "type": "string"
+          },
+          "analyzed_at": {
+            "description": "Timestamp of analysis in ISO format",
+            "type": "string"
+          }
+        },
+        "required": ["date", "coins", "analyzed_at"],
+        "additionalProperties": false
+      },
+      "pricing": {
+        "invoke": "0.01 USDC"
+      }
+    }
+  },
+  "payments": [
+    {
+      "method": "x402",
+      "payee": "0xb308ed39d67D0d4BAe5BC2FAEF60c66BBb6AE429",
+      "network": "base",
+      "endpoint": "https://facilitator.daydreams.systems",
+      "priceModel": {
+        "default": "0.01"
+      },
+      "extensions": {
+        "x402": {
+          "facilitatorUrl": "https://facilitator.daydreams.systems"
+        }
+      }
+    }
+  ]
+}
+

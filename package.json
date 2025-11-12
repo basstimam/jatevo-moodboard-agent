@@ -1,0 +1,35 @@
+{
+  "name": "moodboard",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "bun": ">=1.1.0"
+  },
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run src/index.ts",
+    "agent": "bun run src/agent.ts",
+    "typecheck": "bunx tsc --noEmit",
+    "test:agent": "bun run scripts/test-agent.ts",
+    "test:self": "bun run scripts/test-self-payment.ts",
+    "test:free": "bun run scripts/test-free.ts",
+    "test:consistency": "bun run scripts/test-consistency.ts",
+    "test:jatevo": "bun run scripts/test-jatevo-api.ts",
+    "test:jatevo:full": "bun run scripts/test-jatevo-full.ts",
+    "check": "bun run scripts/check-agent.ts",
+    "pay": "bun run scripts/pay-and-call.ts"
+  },
+  "dependencies": {
+    "@lucid-dreams/agent-kit": "latest",
+    "viem": "^2.21.54",
+    "x402": "^0.3.0",
+    "x402-fetch": "^0.3.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "bun-types": "^1.3.0",
+    "typescript": "^5.9.2"
+  }
+}
